@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buttery Calculator</title>
+  <style>
+    /* Branding elements */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(45deg, #ffecb3, #ffe699, #ffd966, #fff7e6);
+      background-size: 600% 600%;
+      animation: gradientAnimation 6s ease infinite;
+      color: #444;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      cursor: url('https://img.icons8.com/ios/452/knife.png'), auto; /* Butter knife cursor */
+    }
+
+    @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      25% {
+        background-position: 100% 50%;
+      }
+      50% {
+        background-position: 100% 100%;
+      }
+      75% {
+        background-position: 0% 100%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .calculator {
+      background: #fff9db;
+      border: 2px solid #ffd966;
+      border-radius: 12px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 300px;
+      text-align: center;
+    }
+
+    /* Butter logo in header */
+    .brand-logo {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    .display {
+      background: #fff;
+      border: 2px solid #ffe699;
+      border-radius: 8px;
+      height: 50px;
+      font-size: 1.5rem;
+      padding: 5px 10px;
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .button {
+      background: #ffecb3;
+      border: 2px solid #ffd966;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      padding: 20px;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      user-select: none; /* Disable text selection */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Comic Sans MS', sans-serif; /* Fun, quirky font for buttons */
+    }
+
+    .button:hover {
+      background: #ffe699;
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .button:active {
+      background: #ffd966;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transform: translateY(2px);
+    }
+
+    .button.operator {
+      background: #ffd966;
+    }
+
+    .button.operator:hover {
+      background: #ffc107;
+    }
+
+    .button.operator:active {
+      background: #ffb300;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <!-- Butter brand logo added -->
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <button class="button" onclick="appendNumber('7')">7</button>
+      <button class="button" onclick="appendNumber('8')">8</button>
+      <button class="button" onclick="appendNumber('9')">9</button>
+      <button class="button operator" onclick="chooseOperation('/')">&divide;</button>
+
+      <button class="button" onclick="appendNumber('4')">4</button>
+      <button class="button" onclick="appendNumber('5')">5</button>
+      <button class="button" onclick="appendNumber('6')">6</button>
+      <button class="button operator" onclick="chooseOperation('*')">&times;</button>
+
+      <button class="button" onclick="appendNumber('1')">1</button>
+      <button class="button" onclick="appendNumber('2')">2</button>
+      <button class="button" onclick="appendNumber('3')">3</button>
+      <button class="button operator" onclick="chooseOperation('-')">&minus;</button>
+
+      <button class="button" onclick="appendNumber('0')">0</button>
+      <button class="button" onclick="clearDisplay()">C</button>
+      <button class="button" onclick="compute()">=</button>
+      <button class="button operator" onclick="chooseOperation('+')">+</button>
+    </div>
+  </div>
+
+  <script>
+    let currentOperand = '';
+    let previousOperand = '';
+    let operation = null;
+
+    const displayElement = document.getElementById('display');
+
+    function appendNumber(number) {
+      if (currentOperand.includes('.') && number === '.') return;
+      currentOperand = currentOperand === '0' ? number : currentOperand + number;
+      updateDisplay();
+    }
+
+    function chooseOperation(op) {
+      if (currentOperand === '') return;
+      if (previousOperand !== '') compute();
+      operation = op;
+      previousOperand = currentOperand;
+      currentOperand = '';
+    }
+
+    function clearDisplay() {
+      currentOperand = '';
+      previousOperand = '';
+      operation = null;
+      updateDisplay();
+    }
+
+    function compute() {
+      let computation;
+      const prev = parseFloat(previousOperand);
+      const current = parseFloat(currentOperand);
+      if (isNaN(prev) || isNaN(current)) return;
+
+      switch (operation) {
+        case '+':
+          computation = prev + current;
+          break;
+        case '-':
+          computation = prev - current;
+          break;
+        case '*':
+          computation = prev * current;
+          break;
+        case '/':
+          computation = prev / current;
+          break;
+        default:
+          return;
+      }
+
+      currentOperand = computation.toString();
+      operation = null;
+      previousOperand = '';
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      displayElement.textContent = currentOperand || '0';
+    }
+
+    clearDisplay();
+  </script>
+</body>
+</html>
